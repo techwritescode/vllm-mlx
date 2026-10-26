@@ -266,6 +266,10 @@ jobs:
             -m "not slow" \
             -k "not Integration"
 
+      - name: Run strict JSON schema admission regressions
+        run: |
+          pytest tests/test_invalid_json_schema_admission.py -v --tb=short
+
       - name: Run streaming text-with-tool-calls regression tests
         run: |
           # Kept out of the list above because that invocation filters with
