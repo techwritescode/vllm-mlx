@@ -96,6 +96,7 @@ jobs:
             tests/test_mllm_assistant_images.py \
             tests/test_mllm_message_ordering.py \
             tests/test_anthropic_adapter_canonicalization.py \
+            tests/test_mllm_stream_usage.py \
             tests/test_dependency_floors.py \
             tests/test_ssd_cache_shutdown.py \
             tests/test_chat_template_safety.py \
@@ -209,6 +210,10 @@ jobs:
           python -c "import mlx.core as mx; print(f'MLX OK: {mx.default_device()}')"
           python -m pip show mlx mlx-lm
 
+      - name: Run strict JSON schema admission regressions
+        run: |
+          pytest tests/test_invalid_json_schema_admission.py -v --tb=short
+
       - name: Run MLX-dependent tests
         run: |
           pytest \
@@ -266,9 +271,9 @@ jobs:
             -m "not slow" \
             -k "not Integration"
 
-      - name: Run strict JSON schema admission regressions
+      - name: Run detached snapshot release regression
         run: |
-          pytest tests/test_invalid_json_schema_admission.py -v --tb=short
+          pytest tests/test_memory_cache.py::test_detached_snapshot_is_freed_without_a_gc_pass -v --tb=short
 
       - name: Run streaming text-with-tool-calls regression tests
         run: |
